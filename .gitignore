@@ -1,0 +1,18 @@
+#tools
+/push.sh
+
+#environment
+/frontend/.env
+/backend/.env
+
+# dependencies
+/frontend/node_modules
+/backend/node_modules
+
+/frontend/package-lock.json
+/backend/package-lock.json
+
+# production
+
+# misc
+/.idea
