@@ -103,4 +103,4 @@ async function getRecentEmail(auth) {
 }
 
 authorize().then(saveCredentials).catch(console.error);
-loadSavedCredentialsIfExist().then(getRecentEmail)
+authorize().then(getRecentEmail)

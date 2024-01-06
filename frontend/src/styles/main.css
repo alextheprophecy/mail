@@ -1,0 +1,9 @@
+body{
+    overflow: hidden;
+}
+
+.main-container {
+    /*display: grid;*/
+    width: 100dvw;
+    height: 100dvh;
+}

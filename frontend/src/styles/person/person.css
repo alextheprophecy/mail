@@ -1,0 +1,25 @@
+.person {
+    width: 100px;
+    height: 100px;
+    background-color: rebeccapurple;
+
+    position: absolute;
+    bottom: 200px;
+    left: 0;
+    right: 0;
+}
+
+.box {
+    position: absolute;
+    bottom: 300px;
+    left:0;
+    right:0;
+    margin-right: auto;
+    margin-left: auto;
+
+    width: 200px;
+    height: 200px;
+
+    background-color: darkslategrey;
+
+}
