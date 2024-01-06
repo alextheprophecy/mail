@@ -1,8 +1,8 @@
 .queue-wrapper {
     height: 100%;
     width: 350px;
-     margin: 5px;
+    margin: 5px;
     position: relative;
     transform-style: preserve-3d;
-    transform: perspective(500px);
+    transform: perspective(750px);
 }
