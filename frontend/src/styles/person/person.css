@@ -1,15 +1,37 @@
+:root {
+    --width: 200px;
+    --height: 200px;
+}
+
 .person {
+    pointer-events:  none;
     position: absolute;
-    bottom: 150px;
+    bottom: 200px;
     left:0;
     right:0;
     margin-right: auto;
     margin-left: auto;
 
-    width: 200px;
-    height: 200px;
+    width: var(--width);
+    height: var(--height);
+
+    transform: scale(1);
 
     -webkit-filter: drop-shadow(2px 2px 0 black) drop-shadow(-2px -2px 0 white);
     filter:drop-shadow(2px 2px 0 black) drop-shadow(-2px -2px 0 white);
     transition:transform ease 0.4s;
+}
+
+.profile {
+    position: absolute;
+    width: var(--width);
+    height: var(--height);
+    pointer-events:  none;
+}
+
+.hover-shape {
+    pointer-events:  auto;
+    position: absolute;
+    width: var(--width);
+    height: var(--height);
 }

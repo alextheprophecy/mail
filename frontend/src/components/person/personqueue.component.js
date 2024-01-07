@@ -4,16 +4,15 @@ import {useEffect, useState} from "react";
 
 const START_Z_DISTANCE = 150
 const ITEM_Z_DISTANCE = 55
-const ITEM_Y_DISTANCE = 65
-const ITEM_X_OFFSET = 50
-const PersonQueue = ({info}) => {
-    const [queue, setQueue] = useState(info)
+const ITEM_Y_DISTANCE = 45
+const ITEM_X_OFFSET = 35
+const PersonQueue = ({list, title}) => {
+    const [queue, setQueue] = useState(list)
     const [scrollPointer, setScrollPointer] = useState(0)
-
 
     const scrollHandle = (event) => {
         const delta = Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
-        setScrollPointer(Math.min(queue.length, Math.max(0, scrollPointer+delta)))
+        setScrollPointer(Math.min(queue.length-1, Math.max(0, scrollPointer+delta)))
     }
 
     const people = () => {
@@ -23,7 +22,7 @@ const PersonQueue = ({info}) => {
 
             return (<Person opacity={100 - 4 * n}
                             pos={{
-                                'x': Math.pow(-1, n) * ITEM_X_OFFSET,
+                                'x': Math.pow(-1, i) * ITEM_X_OFFSET,
                                 'y': -n * ITEM_Y_DISTANCE,
                                 'z': START_Z_DISTANCE - smoothingFunction(n) * ITEM_Z_DISTANCE
                             }}
@@ -38,6 +37,7 @@ const PersonQueue = ({info}) => {
 
     return (
         <div>
+            <p className={"queue-name"}>{title}</p>
             <div className={"queue-wrapper"} onWheel={scrollHandle}>
                 {people()}
             </div>
