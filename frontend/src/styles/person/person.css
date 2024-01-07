@@ -1,14 +1,15 @@
 .person {
     position: absolute;
-    bottom: 250px;
+    bottom: 150px;
     left:0;
     right:0;
     margin-right: auto;
     margin-left: auto;
 
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
 
     -webkit-filter: drop-shadow(2px 2px 0 black) drop-shadow(-2px -2px 0 white);
     filter:drop-shadow(2px 2px 0 black) drop-shadow(-2px -2px 0 white);
+    transition:transform ease 0.4s;
 }
