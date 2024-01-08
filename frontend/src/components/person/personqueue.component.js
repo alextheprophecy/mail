@@ -16,7 +16,7 @@ const PersonQueue = ({list, title}) => {
     const [focused, setFocused] = useState(-1) //default -1: no person is focused
 
     const scrollHandle = (event) => {
-        const delta = Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
+        const delta = -Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
         setScrollIndex(Math.min(queue.length - 1, Math.max(0, scrollIndex + delta)))
     }
 

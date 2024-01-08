@@ -2,7 +2,7 @@ import "../../styles/person/person.css";
 import {useState} from "react";
 
 const Person = (props) => {
-    const HOVERED_BRIGHT_INCR = 1.25
+    const HOVERED_BRIGHT_INCR = 1.15
     const UNFOCUSED_BRIGHT = 1
     const HOVERED_SIZE_INCR = 1.05
     const FOCUSED_SIZE_INCR = 1.15
@@ -26,7 +26,7 @@ const Person = (props) => {
         setSize(UNFOCUSED_SIZE)
     }
     const onClick = () => {
-        if(focus) showSubject()
+        if (focus) showSubject()
         props.setFocusedPerson(props.index)
         setFocus(true)
 
@@ -38,21 +38,33 @@ const Person = (props) => {
     }
 
     return (
-        <div className={"person"}
-             style={{
-                 transform: `rotateX(10deg) translate3d(${props.pos.x}px, ${props.pos.y}px, ${props.pos.z}px) scale(${size})`,
-                 filter: `contrast(${props.opacity}%) brightness(${brightness})`,
-             }}
-        >
-            <img className={"profile"} src={`faces/${props.image}.png`}/>
+        <div className={"person-container"}>
 
-            <svg viewBox={"0 0 500 500"}>
-                <g className={"hover-shape"} onMouseOver={onHover} onMouseOut={exitHover} onClick={onClick}>
-                    <ellipse fill="transparent" cx={"250"} cy={"175"} rx={"110"} ry={"125"}/>
-                    <path fill="transparent" d={"M 0 500 L 500 500 L 475 390 L 350 300 L 250 275 L 150 300 L 25 390 L 0 500 Z"}/>
-                </g>
-            </svg>
+            {focus ? (<div className={"speech-bubble"}
+                           style={{
+                               transform: `translate3d(${props.pos.x + 100}px,${props.pos.y + 450}px, ${props.pos.z + 300}px)`,
+                               transformStyle:"preserve-3d",
+                           }}>
+                Subject matter: IMPORTANT NEWS
+            </div>) : ""}
 
+            <div className={"person"}
+                 style={{
+                     transform: `rotateX(10deg) translate3d(${props.pos.x}px, ${props.pos.y}px, ${props.pos.z + (focus?300:0)}px) scale(${size})`,
+                     filter: `contrast(${props.opacity}%) brightness(${brightness})`,
+                 }}
+            >
+                <img className={"profile"} src={`faces/${props.image}.png`}/>
+
+                <svg viewBox={"0 0 500 500"}>
+                    <g className={"hover-shape"} onMouseOver={onHover} onMouseOut={exitHover} onClick={onClick}>
+                        <ellipse fill="transparent" cx={"250"} cy={"175"} rx={"110"} ry={"125"}/>
+                        <path fill="transparent"
+                              d={"M 0 500 L 500 500 L 475 390 L 350 300 L 250 275 L 150 300 L 25 390 L 0 500 Z"}/>
+                    </g>
+                </svg>
+
+            </div>
         </div>)
 }
 //
