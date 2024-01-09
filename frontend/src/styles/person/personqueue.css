@@ -3,9 +3,7 @@
     width: 350px;
     margin: 5px;
     position: relative;
-    transform-style: preserve-3d;
-    transform: perspective(750px);
-    z-index: 0;
+
 }
 
 .queue-name {

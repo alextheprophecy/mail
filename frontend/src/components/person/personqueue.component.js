@@ -46,11 +46,9 @@ const PersonQueue = ({list, title}) => {
     }
 
     return (
-        <div>
-            <p className={"queue-name"}>{title}</p>
-            <div className={"queue-wrapper"} onWheel={scrollHandle}>
+        <div className={"queue-wrapper"} onWheel={scrollHandle}>
+                <p className={"queue-name"}>{title}</p>
                 {people()}
-            </div>
         </div>
     )
 }

@@ -3,6 +3,17 @@
     --height: 200px;
 }
 
+.text-container {
+    pointer-events: none;
+    position: absolute; /* Add this line */
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transform-style: flat;
+    transform: none;
+}
+
 .person-container {
     pointer-events: none;
     position: absolute; /* Add this line */
@@ -10,7 +21,18 @@
     left: 0;
     height: 100%;
     width: 100%;
+}
+
+.person-image-container {
+    pointer-events: none;
+    position: absolute; /* Add this line */
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     transform-style: preserve-3d;
+    transform: perspective(750px);
+
 }
 
 .person {
@@ -26,27 +48,7 @@
     width: var(--width);
     height: var(--height);
 
-    transform: scale(1);
     transition: transform ease 0.4s;
-    transform-style: preserve-3d;
-
-}
-
-img{
-    -khtml-user-select: none;
-    -o-user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.profile {
-    pointer-events: none;
-
-    position: absolute;
-    width: var(--width);
-    height: var(--height);
-    transform-style: preserve-3d;
 
 }
 
@@ -61,7 +63,8 @@ img{
 .speech-bubble {
     position: absolute;
     background-color: blanchedalmond;
-    left: 150px;
+    left: 250px;
+    top: 500px;
     width: 300px;
     height: 50px;
     z-index: 2; /* Set a higher value */
