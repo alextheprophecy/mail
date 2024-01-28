@@ -4,8 +4,8 @@
 #environment
 /frontend/.env
 /backend/.env
-/backend/controller/api/googleApiCreds/credentials.json
-/backend/controller/api/googleApiCreds/token.json
+/backend/controller/api/googleApiCreds/
+
 
 # dependencies
 /frontend/node_modules
