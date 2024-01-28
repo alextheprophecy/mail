@@ -1,11 +1,24 @@
+.queue-container {
+    pointer-events: none;
+
+    height: 100%;
+    width: 100%;
+    position: relative;
+    transform: perspective(750px);
+    transform-style: preserve-3d;
+}
+
 .queue-wrapper {
+    pointer-events: none;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+
     height: 100%;
     width: 350px;
-    margin: 5px;
     position: relative;
     transform-style: preserve-3d;
-    transform: perspective(750px);
-    z-index: 0;
 }
 
 .queue-name {

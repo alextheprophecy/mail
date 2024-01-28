@@ -1,14 +1,14 @@
 let express = require("express"),
     router = express.Router();
+const {getImage} = require("../controller/image/image.handler");
 
-const {getPicture, getSciper} = require("../controller/epflApi")
 /**
- * Get person image URL
+ * Get person image
  */
 router.get("/person", (req, res, next) => {
-    getPicture(getSciper()).then((url) => {
-        console.log(url)
-        res.status(200).send(url)
+    const {name, email} = req.body
+    getImage(name, email).then((image) => {
+        res.status(200).send(image)
     })
 });
 

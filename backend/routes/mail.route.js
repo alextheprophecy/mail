@@ -1,11 +1,15 @@
 let express = require("express"),
     router = express.Router();
 
+const fetchMail = require("../controller/api/google.api");
+
 //Basic Mail Handling
 /**
  * Get mails (subject + sender)
  */
 router.get("/mails", (req, res, next) => {
+    const {count} = req.body
+    fetchMail(count).then(mailInfo => res.status(200).send(mailInfo))
 });
 
 /**

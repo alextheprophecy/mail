@@ -3,7 +3,7 @@ import "../../styles/person/personqueue.css";
 import {useEffect, useState} from "react";
 
 const START_Z_DISTANCE = 150
-const ITEM_Z_DISTANCE = 55
+const ITEM_Z_DISTANCE = 70
 const ITEM_Y_DISTANCE = 45
 const ITEM_X_OFFSET = 35
 
@@ -14,6 +14,16 @@ const PersonQueue = ({list, title}) => {
     const [queue, setQueue] = useState(list)
     const [scrollIndex, setScrollIndex] = useState(0)
     const [focused, setFocused] = useState(-1) //default -1: no person is focused
+
+    const changeFocus = (index) => {
+        setFocused(index)
+        //TODO: logic for telling playground which person/text to show
+        if(index===-1)return
+        const msg = list[index].msg
+    }
+
+    const dragHandle = (index) => {
+    }
 
     const scrollHandle = (event) => {
         const delta = -Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
@@ -30,7 +40,7 @@ const PersonQueue = ({list, title}) => {
                 yOffset = (i < focused ? UNFOCUSED_Y_OFFSET : -UNFOCUSED_Y_OFFSET)
                 zOffset = (i < focused ? UNFOCUSED_Z_OFFSET : -UNFOCUSED_Z_OFFSET)
             }
-            return (<Person index={i} setFocusedPerson={setFocused} opacity={100 - 4 * n}
+            return (<Person index={i} setFocusedPerson={changeFocus} dragHandle={dragHandle} opacity={100 - 4 * n}
                             pos={{
                                 'x': Math.pow(-1, i) * ITEM_X_OFFSET,
                                 'y': -n * ITEM_Y_DISTANCE + yOffset,
@@ -46,7 +56,7 @@ const PersonQueue = ({list, title}) => {
     }
 
     return (
-        <div>
+        <div className={"queue-container"}>
             <p className={"queue-name"}>{title}</p>
             <div className={"queue-wrapper"} onWheel={scrollHandle}>
                 {people()}

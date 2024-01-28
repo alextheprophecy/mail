@@ -1,0 +1,19 @@
+.icon {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top:20px;
+    margin: auto;
+
+    background-color: red;
+
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+
+    text-align: center;
+    align-content: center;
+
+    font-size: 1.5rem;
+    border-radius: 50px;
+}

@@ -10,8 +10,8 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']; //.readonly/.
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = path.join(process.cwd(), 'token.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
+const TOKEN_PATH = path.join(process.cwd(), 'controller/api/googleApiCreds/token.json');
+const CREDENTIALS_PATH = path.join(process.cwd(), 'controller/api/googleApiCreds/credentials.json');
 
 /**
  * Reads previously authorized credentials from the save file.
@@ -89,18 +89,54 @@ async function listLabels(auth) {
 
 
 /////////////////////
-async function getRecentEmail(auth) {
+async function getRecentEmails(auth, count) {
     const gmail = google.gmail({version: 'v1', auth});
-    // Only get the recent email - 'maxResults' parameter
-    gmail.users.messages.list({userId: 'me'}).then(res => {
-        const message_id = res.data['messages'][0].id;
-        gmail.users.messages.get({userId: 'me', 'id': message_id}).then(res => {
-            const b64data = res.data.payload.parts[0].body.data
-            const out = Buffer.from(b64data, 'base64').toString()
-            console.log(out)
-         });
-    })
+    return gmail.users.messages.list({userId: 'me'}).then(res => {
+        let messages = res.data['messages'];
+
+        //TODO: if count exceeds threshold, batch into multiple fetches
+        if (messages.length > count) messages = messages.slice(0, count)
+
+        return messages.map(m =>
+            gmail.users.messages.get({userId: 'me', 'id': m.id}).then(res => {
+                return getInfo(res.data.payload)
+            })
+        )
+    }).then(emails => Promise.all(emails))
 }
 
-authorize().then(saveCredentials).catch(console.error);
-authorize().then(getRecentEmail)
+function getInfo(messagePart) {
+    let message = messagePart
+    let messageParent = message //messageParent: contains all parts[] of message
+
+    while (message.mimeType.split("/")[0] === 'multipart') {
+        messageParent = message
+        message = message.parts[0]
+    }
+
+    //TODO: load more than just 0th index. lookup doc. : https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message.MessagePart
+    const messagePartBody = messageParent.parts[0].body
+    const body = Buffer.from(messagePartBody.data, 'base64').toString()
+
+    const headers = messagePart.headers
+    const subject = headers.find(i => i.name === 'Subject').value
+    const senderNames = headers.find(i => i.name === 'From').value
+    const senderEmail = senderNames.split(" ").pop().slice(1, -1)
+
+    return {
+        subject: subject,
+        sender: senderEmail,
+        body: body
+    }
+}
+
+/**
+ * fetches most recent count mails and returns a promise
+ * @param count
+ * @return {Promise<Object[]>} list of json objects containing email info. (subject, sender, body)
+ */
+const fetchMail = (count) => {
+    return authorize().then(a => getRecentEmails(a, count))
+}
+
+module.exports = fetchMail
