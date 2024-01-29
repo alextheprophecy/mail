@@ -18,6 +18,7 @@ const Person = (props) => {
     const [startHold, setStartHold] = useState([0, 0]) //mouse down starting coordinates
     const [drag, setDrag] = useState(false) //is dragging current person component
     const DRAG_MIN_DISTANCE = 20
+
     const onHover = () => {
         setBrightness(HOVERED_BRIGHT_INCR)
         setSize(HOVERED_SIZE_INCR)
@@ -77,7 +78,8 @@ const Person = (props) => {
                  filter: `contrast(${props.opacity}%) brightness(${brightness})`,
              }}
         >
-            <Icon name={"Alexandre Marie Bourgoin"}/>
+            <Icon name={props.name} colour={props.picture}/>
+
             <svg viewBox={"0 0 500 500"}>
                 <g className={"hover-shape"} onMouseOver={onHover} onMouseOut={exitHover}
                    onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseMove={onMove}>
@@ -89,5 +91,5 @@ const Person = (props) => {
         </div>
     )
 }
-//            <img className={"profile"} src={`faces/${props.image}.png`}/>
+//            <img className={"profile"} src={`faces/${props.picture}.png`}/>
 export default Person;

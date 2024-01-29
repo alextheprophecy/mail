@@ -11,7 +11,6 @@ const UNFOCUSED_Z_OFFSET = 50;
 const UNFOCUSED_Y_OFFSET = 60;
 
 const PersonQueue = ({list, title}) => {
-    const [queue, setQueue] = useState(list)
     const [scrollIndex, setScrollIndex] = useState(0)
     const [focused, setFocused] = useState(-1) //default -1: no person is focused
 
@@ -27,11 +26,11 @@ const PersonQueue = ({list, title}) => {
 
     const scrollHandle = (event) => {
         const delta = -Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
-        setScrollIndex(Math.min(queue.length - 1, Math.max(0, scrollIndex + delta)))
+        setScrollIndex(Math.min(list.length - 1, Math.max(0, scrollIndex + delta)))
     }
 
     const people = () => {
-        return queue.map((p, i) => {
+        return list.map((p, i) => {
             const n = i - scrollIndex
             if (n < 0) return "" //if scroll past this index, dont show this person
             let yOffset = 0
@@ -46,7 +45,7 @@ const PersonQueue = ({list, title}) => {
                                 'y': -n * ITEM_Y_DISTANCE + yOffset,
                                 'z': START_Z_DISTANCE - smoothingFunction(n) * ITEM_Z_DISTANCE + zOffset
                             }}
-                            image={p.image}/>)
+                            picture={p.picture} name={p.name}/>)
         })
     }
 

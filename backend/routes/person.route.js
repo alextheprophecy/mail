@@ -1,14 +1,14 @@
 let express = require("express"),
     router = express.Router();
-const {getImage} = require("../controller/image/image.handler");
+const {getPicture} = require("../controller/picture/picture.handler");
 
 /**
- * Get person image
+ * Get person picture
  */
 router.get("/person", (req, res, next) => {
-    const {name, email} = req.body
-    getImage(name, email).then((image) => {
-        res.status(200).send(image)
+    const email = req.query.email
+    getPicture(email).then((pic) => {
+        res.status(200).send(pic)
     })
 });
 
