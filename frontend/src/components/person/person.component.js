@@ -12,12 +12,9 @@ const Person = (props) => {
     const [size, setSize] = useState(1)
     const [brightness, setBrightness] = useState(1)
 
-    const [focus, setFocus] = useState(false) //is focusing current person component
-
     const [hold, setHold] = useState(false) //is holding mouse down
     const [startHold, setStartHold] = useState([0, 0]) //mouse down starting coordinates
-    const [drag, setDrag] = useState(false) //is dragging current person component
-    const DRAG_MIN_DISTANCE = 20
+    const DRAG_MIN_DISTANCE = 15
 
     const onHover = () => {
         setBrightness(HOVERED_BRIGHT_INCR)
@@ -26,7 +23,6 @@ const Person = (props) => {
 
     const exitHover = () => {
         props.setFocusedPerson(-1)
-        setFocus(false)
         setHold(false)
 
         setBrightness(UNFOCUSED_BRIGHT)
@@ -38,22 +34,21 @@ const Person = (props) => {
          * dragging
          */
         if (hold && (euclDistOldHold(e.clientX, e.clientY) >= DRAG_MIN_DISTANCE)) {
-            alert("movin")
-
+            props.dragHandle(props.index)
         }
     }
 
-    const onMouseUp = (e) => {
+    const onMouseUp = () => {
         /**
          * clicking
          */
         if (hold) {
             props.setFocusedPerson(props.index)
-            setFocus(true)
             setSize(FOCUSED_SIZE_INCR)
         }
-
         setHold(false)
+        //TODO:USE THIS TO IMPLEMENT ADDITION TO QUEUES
+        props.letGoHandle()
     }
 
     const onMouseDown = (e) => {
@@ -62,7 +57,7 @@ const Person = (props) => {
     }
 
     /**
-     * euclidean dist between current x,y pos and old mouse position
+     * Euclidean dist between current x,y pos and old mouse position
      * @param x
      * @param y
      * @return {number}
@@ -78,13 +73,13 @@ const Person = (props) => {
                  filter: `contrast(${props.opacity}%) brightness(${brightness})`,
              }}
         >
-            <Icon name={props.name} colour={props.picture}/>
+            <Icon name={props.name} pictureData={props.picture}/>
 
             <svg viewBox={"0 0 500 500"}>
                 <g className={"hover-shape"} onMouseOver={onHover} onMouseOut={exitHover}
                    onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseMove={onMove}>
-                    <ellipse fill="white" cx={"250"} cy={"175"} rx={"105"} ry={"150"}/>
-                    <path fill="white"
+                    <ellipse fill="transparent" cx={"250"} cy={"175"} rx={"105"} ry={"150"}/>
+                    <path fill="hsl(36, 40%, 59%)"
                           d={"M 0 500 L 500 500 L 475 390 L 350 300 L 250 275 L 150 300 L 25 390 L 0 500 Z"}/>
                 </g>
             </svg>

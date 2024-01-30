@@ -9,8 +9,8 @@ const fetchMail = require("../controller/api/google.api");
  */
 router.get("/mails", (req, res, next) => {
     const count = req.query.count
-    const labels = req.query.labels
-    fetchMail(count, labels).then(mailInfo => res.status(200).send(mailInfo)).catch(err => {
+    const label = req.query.label
+    fetchMail(count, label).then(mailInfo => res.status(200).send(mailInfo)).catch(err => {
         res.status(200).send([]) //no content if error fetching
     })
 });

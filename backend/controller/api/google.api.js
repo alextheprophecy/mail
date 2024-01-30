@@ -89,9 +89,9 @@ async function listLabels(auth) {
 
 
 /////////////////////
-async function getRecentEmails(auth, count, labels) {
+async function getRecentEmails(auth, count, label) {
     const gmail = google.gmail({version: 'v1', auth});
-    return gmail.users.messages.list({labelIds: labels, userId: 'me'}).then(res => {
+    return gmail.users.messages.list({labelIds: label, userId: 'me'}).then(res => {
         if (res.data.resultSizeEstimate === 0) { //dirty: throwing error with (invalid) error code 204, as there is no content. Catch this in router to send an empty array instead
             const err = new Error("no content")
             err.code = 204
@@ -123,16 +123,18 @@ function getInfo(messagePart) {
     //const body = Buffer.from(messagePartBody.data, 'base64').toString()
 
     const headers = messagePart.headers
+    const date = new Date(headers.find(i => i.name === 'Date').value).toISOString()
     const subject = headers.find(i => i.name === 'Subject').value
     const unsortedNames = headers.find(i => i.name === 'From').value.split(" ")
     const senderEmail = unsortedNames.pop().slice(1, -1) //email: last name, pop s.t. senderNames now contains only names
     const senderNames = unsortedNames.join(" ")
 
     return {
-        subject: subject,
+        subject: "subject",
         senderName: senderNames,
         senderEmail: senderEmail,
-        body: "body"
+        body: "body",
+        date: date
     }
 }
 
@@ -142,8 +144,8 @@ function getInfo(messagePart) {
  * @param labels
  * @return {Promise<Object[]>} list of json objects containing email info. (subject, sender, body)
  */
-const fetchMail = (count, labels) => {
-    return authorize().then(a => getRecentEmails(a, count, labels))
+const fetchMail = (count, label) => {
+    return authorize().then(a => getRecentEmails(a, count, label))
 }
 
 module.exports = fetchMail

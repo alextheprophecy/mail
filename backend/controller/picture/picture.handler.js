@@ -29,7 +29,7 @@ const getPicture = (email) => {
     )
 }
 
-const SATURATION = 40
+const SATURATION = 25
 const LIGHTNESS = 40
 const getColour = (string) => {
     const hashed = hash(string) % 360
