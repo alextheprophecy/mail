@@ -2,7 +2,7 @@ import Person from "./person.component";
 import "../../styles/person/personqueue.css";
 import {useEffect, useState} from "react";
 
-const START_Z_DISTANCE = 150
+const START_Z_DISTANCE = 175
 const ITEM_Z_DISTANCE = 70
 const ITEM_Y_DISTANCE = 45
 const ITEM_X_OFFSET = 35
@@ -23,12 +23,9 @@ const PersonQueue = (props) => {
     }
 
     const dragHandle = (index) => {
-        if (!props.drag) props.removePerson(index)
+        if (!props.drag)props.setDragData(props.queueIndex, index)
         props.setDrag(true)
-        props.setDragData(props.list[index])
     }
-
-    const letGoHandle = () => {}//TODO: this implementation might prove useful for drag dropping people -> setDragging(false)
 
     const scrollHandle = (event) => {
         const delta = -Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
@@ -45,7 +42,7 @@ const PersonQueue = (props) => {
                 yOffset = (i < focused ? UNFOCUSED_Y_OFFSET : -UNFOCUSED_Y_OFFSET)
                 zOffset = (i < focused ? UNFOCUSED_Z_OFFSET : -UNFOCUSED_Z_OFFSET)
             }
-            return (<Person index={i} setFocusedPerson={changeFocus} dragHandle={dragHandle} letGoHandle={letGoHandle}
+            return (<Person index={i} setFocusedPerson={changeFocus} dragHandle={dragHandle}
                             opacity={opacityFunction(n)}
                             pos={{
                                 'x': Math.pow(-1, i) * ITEM_X_OFFSET,
@@ -66,11 +63,13 @@ const PersonQueue = (props) => {
     }
 
     return (
-        <div className={"queue-container"} onMouseOver={()=>props.queueHover(props.index)}>
+        <div className={"queue-container"} onMouseEnter={()=>props.queueHover(props.queueIndex)}>
             <p className={"queue-name"}>{props.title}</p>
             <div className={"queue-wrapper"} onWheel={scrollHandle}>
                 {people()}
             </div>
+            <div className={"queue-blur-layer"}/>
+
         </div>
     )
 }

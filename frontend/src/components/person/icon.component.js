@@ -1,6 +1,6 @@
 import "../../styles/person/icon.css";
 
-const Icon = ({name, pictureData}) => {
+const Icon = (props) => {
     const PICTURE_TYPES = {
         myWebsite: "my-website",
         epfl: "epfl",
@@ -9,7 +9,8 @@ const Icon = ({name, pictureData}) => {
     }
 
     const initials = () => {
-        const names = name.replace(/[^a-z ]/gi, '').toString().split(" ") //except for spaces
+        if(!props.name)return "ERR"
+        const names = props.name.replace(/[^a-z ]/gi, '').toString().split(" ") //except for spaces
         return names.map((n, i) => (i === 0 ? n.slice(0, 3) : n[0]).toUpperCase()).join('.').concat(".")
     }
 
@@ -17,10 +18,10 @@ const Icon = ({name, pictureData}) => {
      * sets background colour or not of icon if picture data is only icon colour
      * @return {{backgroundColor}|{}}
      */
-    const iconStyle = () => pictureData.type === PICTURE_TYPES.iconColour ? {backgroundColor: pictureData.value} : {}
+    const iconStyle = () => props.pictureData.type === PICTURE_TYPES.iconColour ? {backgroundColor: props.pictureData.value} : {}
 
     return (
-        <div className={"icon"} style={iconStyle()}>
+        <div className={props.drag?"drag-icon":"icon"} style={iconStyle()}>
             {initials()}
         </div>
     )

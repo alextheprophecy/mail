@@ -13,10 +13,10 @@ const DraggablePerson = (props) => {
                  transform: `translate(${props.pos.x}px, ${props.pos.y}px) scale(${size})`
              }}
         >
-            <Icon name={props.data.name} pictureData={props.data.picture}/>
+            <Icon name={props.data.senderName} pictureData={props.data.picture} drag={true}/>
 
-            <svg viewBox={"0 0 500 500"}>
-                <g className={"hover-shape"}>
+            <svg viewBox={"0 30 500 500"}>
+                <g>
                     <ellipse fill="transparent" cx={"250"} cy={"175"} rx={"105"} ry={"150"}/>
                     <path fill="hsl(36, 39%, 59%)"
                           d={"M 0 500 L 500 500 L 475 390 L 350 300 L 250 275 L 150 300 L 25 390 L 0 500 Z"}/>

@@ -127,7 +127,8 @@ function getInfo(messagePart) {
     const subject = headers.find(i => i.name === 'Subject').value
     const unsortedNames = headers.find(i => i.name === 'From').value.split(" ")
     const senderEmail = unsortedNames.pop().slice(1, -1) //email: last name, pop s.t. senderNames now contains only names
-    const senderNames = unsortedNames.join(" ")
+    let senderNames = unsortedNames.join(" ")
+    if(!senderNames)senderNames="Anonymous"
 
     return {
         subject: "subject",

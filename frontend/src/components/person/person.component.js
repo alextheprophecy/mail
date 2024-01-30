@@ -14,7 +14,7 @@ const Person = (props) => {
 
     const [hold, setHold] = useState(false) //is holding mouse down
     const [startHold, setStartHold] = useState([0, 0]) //mouse down starting coordinates
-    const DRAG_MIN_DISTANCE = 15
+    const DRAG_MIN_DISTANCE = 5
 
     const onHover = () => {
         setBrightness(HOVERED_BRIGHT_INCR)
@@ -47,8 +47,6 @@ const Person = (props) => {
             setSize(FOCUSED_SIZE_INCR)
         }
         setHold(false)
-        //TODO:USE THIS TO IMPLEMENT ADDITION TO QUEUES
-        props.letGoHandle()
     }
 
     const onMouseDown = (e) => {
