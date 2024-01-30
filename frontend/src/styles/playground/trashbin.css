@@ -1,0 +1,39 @@
+.trash-bin-container {
+    pointer-events: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+
+    width: 230px;
+    height: 300px;
+    border-radius: 0 100% 0 0;
+}
+
+.bin-inner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+
+    background-color: hsl(0, 50%, 40%);
+    border-radius: 0 100% 0 0;
+
+    rotate: -90deg;
+    transform-origin: 0 100%;
+
+    transition: rotate ease 0.23s, scale ease 0.23s;
+}
+
+.bin-inner:hover {
+    scale: 1.2;
+}
+
+.bin-image {
+    position: absolute;
+    bottom: 30px;
+    left:20px;
+    filter: invert();
+    width: 150px;
+}

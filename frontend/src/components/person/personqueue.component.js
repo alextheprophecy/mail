@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 const START_Z_DISTANCE = 175
 const ITEM_Z_DISTANCE = 70
 const ITEM_Y_DISTANCE = 45
-const ITEM_X_OFFSET = 35
+const ITEM_X_OFFSET = 40
 
 const UNFOCUSED_Z_OFFSET = 50;
 const UNFOCUSED_Y_OFFSET = 60;
@@ -13,8 +13,8 @@ const UNFOCUSED_Y_OFFSET = 60;
 const PersonQueue = (props) => {
     const [scrollIndex, setScrollIndex] = useState(0)
     const [focused, setFocused] = useState(-1) //default -1: no person is focused
-    const [dragging, setDragging] = useState(false) //is user dragging a person around
 
+    const [canAnimate, setCanAnimate] = useState(true)
     const changeFocus = (index) => {
         setFocused(index)
         //TODO: logic to find and show person mail subject
@@ -23,7 +23,7 @@ const PersonQueue = (props) => {
     }
 
     const dragHandle = (index) => {
-        if (!props.drag)props.setDragData(props.queueIndex, index)
+        if (!props.drag) props.setDragData(props.queueIndex, index)
         props.setDrag(true)
     }
 
@@ -41,6 +41,13 @@ const PersonQueue = (props) => {
             if (focused !== -1 && focused !== i) {
                 yOffset = (i < focused ? UNFOCUSED_Y_OFFSET : -UNFOCUSED_Y_OFFSET)
                 zOffset = (i < focused ? UNFOCUSED_Z_OFFSET : -UNFOCUSED_Z_OFFSET)
+            }
+
+            let animatePerson = false
+            if (props.anim && canAnimate) {
+                setCanAnimate(false)
+                animatePerson = i === 0
+                Promise.resolve(props.finishAnim(() => setScrollIndex(0))).then(() => setCanAnimate(true))
             }
             return (<Person index={i} setFocusedPerson={changeFocus} dragHandle={dragHandle}
                             opacity={opacityFunction(n)}
@@ -62,14 +69,17 @@ const PersonQueue = (props) => {
         return Math.max(100 - 5 * x, 50)
     }
 
+    const brightnessFunction = (x) => {
+        return Math.max(0.1 * x, 0)
+    }
+
     return (
-        <div className={"queue-container"} onMouseEnter={()=>props.queueHover(props.queueIndex)}>
+        <div className={"queue-container"} onMouseEnter={() => props.queueHover(props.queueIndex)}>
             <p className={"queue-name"}>{props.title}</p>
             <div className={"queue-wrapper"} onWheel={scrollHandle}>
                 {people()}
             </div>
-            <div className={"queue-blur-layer"}/>
-
+            {props.selected ? <div className={"queue-blur-layer"}/> : ""}
         </div>
     )
 }

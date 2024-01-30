@@ -7,7 +7,8 @@ const {getPicture} = require("../controller/picture/picture.handler");
  */
 router.get("/person", (req, res, next) => {
     const email = req.query.email
-    getPicture(email).then((pic) => {
+    const name = req.query.name
+    getPicture(email, name).then((pic) => {
         res.status(200).send(pic)
     })
 });

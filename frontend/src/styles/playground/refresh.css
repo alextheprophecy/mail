@@ -1,0 +1,26 @@
+.refresh-button {
+    position: absolute;
+    margin: 12px;
+    left: 0;
+    top: 0;
+    width: 35px;
+    height: 35px;
+    background-color: #f2d291;
+    z-index: 30;
+}
+
+.refresh-button:hover {
+    background-color: #fceded;
+    scale: 1.1;
+}
+
+
+.refresh-button:active {
+    background-color: #98c68f;
+    scale: 0.95;
+}
+
+.refresh-img {
+    width: 35px;
+    aspect-ratio: 1;
+}

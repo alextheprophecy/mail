@@ -1,28 +1,30 @@
-import PersonQueue from "../person/personqueue.component";
-import DraggablePerson from "../person/draggable.person.component";
-
 import "../../styles/playground/playground.css";
 import {useEffect, useState} from "react";
 
 import axios from 'axios';
-import {hover} from "@testing-library/user-event/dist/hover";
+
+import PersonQueue from "../person/personqueue.component";
+import DraggablePerson from "../person/draggable.person.component";
+import TrashBin from "./trashbin.component";
+import Refresh from "./refresh.component";
 
 const Playground = () => {
     const LABELS = ["INBOX", "SENT", "TRASH"]//, "INBOX", "TRASH"]//["INBOX", "CHAT", "SENT", "SPAM"]
-    const COUNT = 10
+    const COUNT = 25
     const [mails, setMails] = useState(new Array(LABELS.length).fill([]))
+    const [animateQueues, setAnimateQueues] = useState(new Array(LABELS.length).fill(0)) //state list tracking which queues need animation (1) or not (0) after person has been dropped in
 
     const [drag, setDrag] = useState(false)
     const [dragData, setDragData] = useState(0) //currently dragged person object
     const [oldDragState, setOldDragState] = useState([-1, -1]) //label index and array index of person pre-drag
     const [mousePos, setMousePos] = useState([0, 0])
-    const [hoveredQueue, setHoveredQueue] = useState(1) //index of queue that mouse is hovering
+    const [hoveredQueue, setHoveredQueue] = useState(0) //index of queue that mouse is hovering. an index of -1 represents the bin
 
     /**
      * parallel fetch of mails by labels filters-> for each mail parallel fetch of people by mail senderEmail info -> concatenation of results as array for n labels of [mail informations for label i, picture for label i]
      * then stores data into mail array state once all concurrent promises are handled
      */
-    const fetchMailsAndPictures = (count) => {
+    const fetchMailsAndPictures = (count=COUNT) => {
         Promise.all(
             LABELS.map((label, i) => {
                 return axios.get("http://localhost:4000/mails/mails", {
@@ -34,7 +36,7 @@ const Playground = () => {
                     if (resMails.data.length === 0) return Promise.resolve([])
                     return Promise.all(
                         resMails.data.map(mailInfo =>
-                            axios.get("http://localhost:4000/people/person", {params: {email: mailInfo.senderEmail}})
+                            axios.get("http://localhost:4000/people/person", {params: {email: mailInfo.senderEmail, name:mailInfo.senderName}})
                                 .then(pic => {
                                     return {...mailInfo, picture: pic.data}
                                 })
@@ -48,17 +50,27 @@ const Playground = () => {
     const onMouseUp = () => {
         //dropping dragged person
         if (drag) {
+            if(hoveredQueue===-1) return setDrag(false)
+            //if dropped in original queue
             if (hoveredQueue === oldDragState[0]) addPersonToQueue(hoveredQueue, dragData, oldDragState[1])
-            else addPersonToQueue(hoveredQueue, dragData)
+            else {
+                //dropped in new queue
+                addPersonToQueue(hoveredQueue, dragData)
+                setQueueAnim(hoveredQueue, 1)
+            }
         }
         setDrag(false)
     }
 
     useEffect(() => {
-        fetchMailsAndPictures(COUNT)
+        fetchMailsAndPictures()
         window.addEventListener('mousemove', onMouseMove)
         return (() => window.removeEventListener('mousemove', onMouseMove))
     }, []);
+
+    const setQueueAnim = (queueIndex, animate) => {
+        setAnimateQueues([...animateQueues.slice(0,queueIndex), animate, ...animateQueues.slice(queueIndex+1)])
+    }
 
     const removePersonFromQueue = (queueIndex, personIndex) => {
         const newQueue = mails[queueIndex]
@@ -92,8 +104,9 @@ const Playground = () => {
 
     const personQueues = () => {
         return LABELS.map((l, i) =>
-            <PersonQueue queueIndex={i} title={l} list={listMails(i)}
-                         queueHover={setHoveredQueue}
+            <PersonQueue anim={animateQueues[i]} finishAnim={(f)=> [f(),setQueueAnim(i, 0)]}
+                         queueIndex={i} title={l} list={listMails(i)}
+                         queueHover={setHoveredQueue} selected={drag&&hoveredQueue===i}
                          drag={drag} setDrag={setDrag}
                          setDragData={setDraggedPersonData}
             />
@@ -106,8 +119,13 @@ const Playground = () => {
 
     return (
         <div className="playground" onMouseUp={onMouseUp}>
+            <Refresh whenRefresh={()=> {
+                fetchMailsAndPictures()
+                setAnimateQueues(animateQueues.map(()=>1))
+            }}/>
             {drag ? draggedPerson() : ""}
             {personQueues()}
+            <TrashBin hovered={()=>setHoveredQueue(-1)} open={drag}/>
         </div>
     )
 

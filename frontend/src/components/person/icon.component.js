@@ -11,7 +11,8 @@ const Icon = (props) => {
     const initials = () => {
         if(!props.name)return "ERR"
         const names = props.name.replace(/[^a-z ]/gi, '').toString().split(" ") //except for spaces
-        return names.map((n, i) => (i === 0 ? n.slice(0, 3) : n[0]).toUpperCase()).join('.').concat(".")
+        const firstAndLast = [names[0], names.pop()]
+        return firstAndLast.map((n, i) => (i === 0 ? n.slice(0, 3) : n[0]).toUpperCase()).join('.').concat(".")
     }
 
     /**
