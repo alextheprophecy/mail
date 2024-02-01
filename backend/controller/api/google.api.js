@@ -103,12 +103,12 @@ async function getRecentEmails(auth, count, label) {
         if (messages.length > count) messages = messages.slice(0, count)
 
         return messages.map(m =>
-            gmail.users.messages.get({userId: 'me', 'id': m.id}).then(res => getInfo(res.data.payload))
+            gmail.users.messages.get({userId: 'me', 'id': m.id}).then(res => getInfo(res.data.payload, m.id))
         )
     }).then(emails => Promise.all(emails))
 }
 
-function getInfo(messagePart) {
+function getInfo(messagePart, id) {
     let message = messagePart
     let messageParent = message //messageParent: contains all parts[] of message
 
@@ -135,7 +135,8 @@ function getInfo(messagePart) {
         senderName: senderNames,
         senderEmail: senderEmail,
         body: "body",
-        date: date
+        date: date,
+        id: id
     }
 }
 

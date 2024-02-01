@@ -16,6 +16,8 @@ const Person = (props) => {
     const [startHold, setStartHold] = useState([0, 0]) //mouse down starting coordinates
     const DRAG_MIN_DISTANCE = 5
 
+    const TRANSITION_TIME = 0.5
+
     const onHover = () => {
         setBrightness(HOVERED_BRIGHT_INCR)
         setSize(HOVERED_SIZE_INCR)
@@ -69,6 +71,7 @@ const Person = (props) => {
              style={{
                  transform: `rotateX(10deg) translate3d(${props.pos.x}px, ${props.pos.y}px, ${props.pos.z}px) scale(${size})`,
                  filter: `contrast(${props.opacity}%) brightness(${brightness})`,
+                 transition: `transform ease ${props.transition?TRANSITION_TIME:0}s`
              }}
         >
             <Icon name={props.name} pictureData={props.picture}/>

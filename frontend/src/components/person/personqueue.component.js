@@ -1,6 +1,7 @@
 import Person from "./person.component";
 import "../../styles/person/personqueue.css";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import {waitFor} from "@testing-library/react";
 
 const START_Z_DISTANCE = 175
 const ITEM_Z_DISTANCE = 70
@@ -14,7 +15,17 @@ const PersonQueue = (props) => {
     const [scrollIndex, setScrollIndex] = useState(0)
     const [focused, setFocused] = useState(-1) //default -1: no person is focused
 
-    const [canAnimate, setCanAnimate] = useState(true)
+    const canAnimate = useRef(true)
+    const prevList = useRef([])
+    const canChangePos = useRef(true)
+
+    const arraysEqual = (a, b) => {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+        return a.every((val, i) => JSON.stringify(val) === JSON.stringify(b[i]))
+    }
+
     const changeFocus = (index) => {
         setFocused(index)
         //TODO: logic to find and show person mail subject
@@ -33,31 +44,47 @@ const PersonQueue = (props) => {
     }
 
     const people = () => {
+        if (canChangePos.current) {
+            if (!arraysEqual(prevList.current, props.list)) { //list was changed
+                if(prevList.current.length<props.list.length) {//new element added
+                    setScrollIndex(0)
+                    canChangePos.current = false
+                    const a = Promise.resolve().then(() => canChangePos.current = true);
+                }else{ //element removed; find index of removal
+                    setScrollIndex(Math.max(0,scrollIndex-1))
+                }
+            }
+            prevList.current = props.list //update previous list ref
+        }
+
         return props.list.map((p, i) => {
             const n = i - scrollIndex
-            if (n < 0) return "" //if scroll past this index, dont show this person
-            let yOffset = 0
-            let zOffset = 0
-            if (focused !== -1 && focused !== i) {
-                yOffset = (i < focused ? UNFOCUSED_Y_OFFSET : -UNFOCUSED_Y_OFFSET)
-                zOffset = (i < focused ? UNFOCUSED_Z_OFFSET : -UNFOCUSED_Z_OFFSET)
-            }
+            const animatingFirstPerson = !canChangePos.current&&i===0
+            if (n < 0 || animatingFirstPerson) return "" //if scroll past this index, dont show this person
 
-            let animatePerson = false
-            if (props.anim && canAnimate) {
-                setCanAnimate(false)
-                animatePerson = i === 0
-                Promise.resolve(props.finishAnim(() => setScrollIndex(0))).then(() => setCanAnimate(true))
-            }
-            return (<Person index={i} setFocusedPerson={changeFocus} dragHandle={dragHandle}
+
+            return (<Person key={prevList[i]} index={i} setFocusedPerson={changeFocus} dragHandle={dragHandle}
                             opacity={opacityFunction(n)}
-                            pos={{
-                                'x': Math.pow(-1, i) * ITEM_X_OFFSET,
-                                'y': -n * ITEM_Y_DISTANCE + yOffset,
-                                'z': START_Z_DISTANCE - smoothingFunction(n) * ITEM_Z_DISTANCE + zOffset
-                            }}
+                            pos={canChangePos.current?positionFunction(i):positionFunction(i - 1)}
+                            transition={canChangePos.current}
                             picture={p.picture} name={p.name}/>)
         })
+    }
+
+    const positionFunction = (i) => {
+        const n = i - scrollIndex
+
+        let yOffset = 0
+        let zOffset = 0
+        if (focused !== -1 && focused !== i) {
+            yOffset = (i < focused ? UNFOCUSED_Y_OFFSET : -UNFOCUSED_Y_OFFSET)
+            zOffset = (i < focused ? UNFOCUSED_Z_OFFSET : -UNFOCUSED_Z_OFFSET)
+        }
+        return {
+            'x': Math.pow(-1, i) * ITEM_X_OFFSET,
+            'y': -n * ITEM_Y_DISTANCE + yOffset,
+            'z': START_Z_DISTANCE - smoothingFunction(n) * ITEM_Z_DISTANCE + zOffset
+        }
     }
 
     const smoothingFunction = (x) => { //smoothing function I designed on www.desmos.com
