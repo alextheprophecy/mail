@@ -5,7 +5,7 @@ let bodyParser = require('body-parser');
 
 dotenv.config()
 
-const loginRoute = require('./routes/login.route')
+const userRoute = require('./routes/user.route')
 const mailRoute = require('./routes/mail.route')
 const personRoute = require('./routes/person.route')
 
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 
 //routes
-app.use('/login', loginRoute)
+app.use('/user', userRoute)
 app.use('/mails', mailRoute)
 app.use('/people', personRoute)
 

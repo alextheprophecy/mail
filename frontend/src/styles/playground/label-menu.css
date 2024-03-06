@@ -1,0 +1,10 @@
+.label-menu-container {
+    flex-shrink: 0;
+    height: 100%;
+    width: 30%;
+    background-color: #8e4023;
+
+    text-align: center;
+    color: wheat;
+    font-size: 1.5rem;
+}

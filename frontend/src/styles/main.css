@@ -1,4 +1,11 @@
+@font-face {
+    font-family: "Kanit-Light";   /*Can be any text*/
+    src: local("Kanit-Light"),
+    url("../fonts/Kanit-Light.ttf") format("truetype");
+}
+
 body{
+    background-color: wheat;
     overflow: hidden;
     margin: 0;
 }

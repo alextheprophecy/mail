@@ -1,0 +1,17 @@
+.login-page-container {
+    text-align: center;
+    color: #8e4023;
+    font-size: calc(12px + 1.5vw);
+    font-family: "Kanit-Light", serif;
+}
+
+.login-fields {
+    margin: 150px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.login-icons {
+    position: relative;
+    width: 200px;
+}
