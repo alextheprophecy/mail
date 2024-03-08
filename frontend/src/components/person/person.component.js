@@ -1,28 +1,24 @@
 import "../../styles/person/person.css";
 import {useRef, useState} from "react";
 import Icon from "./icon.component";
+import {
+    BENT_OVER_OPACITY, BENT_OVER_X_ROT,
+    DRAG_MIN_DISTANCE, FOCUSED_BRIGHT_INCR, FOCUSED_SIZE_INCR,
+    HOVERED_BRIGHT_INCR,
+    HOVERED_SIZE_INCR,
+    INITIAL_BRIGHT,
+    INITIAL_SIZE, INITIAL_X_ROT, TRANSITION_TIME
+} from "./person.constants";
 
 const Person = (props) => {
-    const INITIAL_X_ROT = 10
-    const BENT_OVER_X_ROT = 60
-    const BENT_OVER_OPACITY = 0.2
 
-    const INITIAL_SIZE = 1
-    const HOVERED_SIZE_INCR = 1.05
-    const FOCUSED_SIZE_INCR = 1.23
-
-    const INITIAL_BRIGHT = 1
-    const HOVERED_BRIGHT_INCR = 1.15
-    const FOCUSED_BRIGHT_INCR = 1.5
-
-    const TRANSITION_TIME = 0.5
+    const [showSubject, setShowSubject] = useState(false)
 
     const [size, setSize] = useState(1)
     const [brightness, setBrightness] = useState(1)
 
     const [hold, setHold] = useState(false) //is holding mouse down
     const [startHold, setStartHold] = useState([0, 0]) //mouse down starting coordinates
-    const DRAG_MIN_DISTANCE = 5
 
     const personRef = useRef()
 
@@ -33,6 +29,7 @@ const Person = (props) => {
 
     const exitHover = () => {
         props.setFocusedPerson(-1)
+        setShowSubject(false)
         setHold(false)
 
         setBrightness(INITIAL_BRIGHT)
@@ -53,6 +50,7 @@ const Person = (props) => {
          * clicking
          */
         if (hold) {
+            setShowSubject(true)
             props.setFocusedPerson(props.index, personRef.current.getBoundingClientRect())
             setBrightness(FOCUSED_BRIGHT_INCR)
             setSize(FOCUSED_SIZE_INCR)
@@ -84,6 +82,11 @@ const Person = (props) => {
 
              }}
         >
+            {showSubject?
+                <div className={"subject-container"}>
+                    <div className={"subject-slider"}></div>
+                </div> :""}
+
             <Icon.Icon name={props.personData.name} pictureData={props.personData.picture}/>
 
             <svg viewBox={"0 0 500 500"}>

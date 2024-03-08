@@ -21,13 +21,13 @@ const getFaceFromPicture = (pictureUrl) => {
             const b = Buffer.from(a.data)
             return faceapi.tinyFaceDetector(t.node.decodeImage(b)).then((r) => {
                 const f = r[0]
+                if(!f) throw new Error("no face found!")
                 return {imgW : f.imageDims.width, imgH : f.imageDims.height,
                     faceW: f.box.width, faceH: f.box.height, faceX: f.box.x, faceY: f.box.y, url:pictureUrl}
             })
         })
-    }).catch(e => console.log(e))
+    })
 }
-//getFaceFromPicture("https://img.freepik.com/premium-photo/shot-group-young-women-standing-together-outside-created-with-generative-ai_762026-34413.jpg").then(a=>console.log(a))//("https://people.epfl.ch/private/common/photos/links/107537.jpg")
 
 /**
  * gives the picture of a
@@ -42,7 +42,7 @@ const getPicture = (email, name) => {
 
     return getPictureFromEmail(email).then(p => {
         //fetch EPFL profile picture
-        return Promise.resolve({type: PICTURE_TYPES.epfl, value: getFaceFromPicture(p)})
+        return getFaceFromPicture(p).then(f=>{return{type: PICTURE_TYPES.epfl, ...f}})
 
     }).catch(() => {
             //TODO: fetch company search profile picture (lookup using wikipedia API)
@@ -74,6 +74,5 @@ const hash = (str) => {
 
 
 module.exports = {
-    getFaceFromPicture,
     getPicture
 }

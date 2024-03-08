@@ -54,3 +54,23 @@
     background-color: #98c68f;
     width: 100%;
 }
+
+.speech-bubble {
+    pointer-events: none;
+
+    position: absolute;
+    opacity: 0;
+    transition: opacity ease-in 0.4s;
+}
+
+.speech-shape {
+    pointer-events: none;
+    position: absolute;
+    background-color: rebeccapurple;
+
+}
+.speech-shape div {
+    background-color: chartreuse;
+    width: 10px;
+    height: 10px;
+}

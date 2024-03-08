@@ -25,8 +25,8 @@ const Icon = (props) => {
         const ratioH = PP_HEIGHT / props.pictureData.faceH
         const style = props.pictureData ?
             {
-                left: `${PP_PADDING-props.pictureData.faceX * ratioW}px`,
-                top: `${PP_PADDING-props.pictureData.faceY * ratioH}px`,
+                left: `${PP_PADDING - props.pictureData.faceX * ratioW}px`,
+                top: `${PP_PADDING - props.pictureData.faceY * ratioH}px`,
                 width: `${props.pictureData.imgW * ratioW}px`,
                 height: `${props.pictureData.imgH * ratioH}px`
             } : {}
@@ -40,9 +40,9 @@ const Icon = (props) => {
      * @return {{backgroundColor}|{}}
      */
     const iconStyle = () => props.pictureData.type === PICTURE_TYPES.iconColour ? {backgroundColor: props.pictureData.value} :
-        {width:`${PP_WIDTH}px`, height:`${PP_HEIGHT}px`, padding:`${PP_PADDING}px`}
+        {width: `${PP_WIDTH}px`, height: `${PP_HEIGHT}px`, padding: `${PP_PADDING}px`}
 
-    const className = () => props.drag ? "drag-icon" : props.pictureData.type === PICTURE_TYPES.iconColour ? "icon" : "epfl-profile"
+    const className = () => props.pictureData.type === PICTURE_TYPES.epfl ? "epfl-profile" : props.drag ? "drag-icon" : "icon"
     return (
         <div className={className()} style={iconStyle()}>
             {props.pictureData.type === PICTURE_TYPES.iconColour ? initials() : epflProfilePicture()}

@@ -9,9 +9,10 @@ import TrashBin from "./trashbin.component";
 import Refresh from "../navbar/refresh.component";
 import Snippet from "./snippet.component";
 import LabelMenu from "./label-menu.component";
+import {hover} from "@testing-library/user-event/dist/hover";
 
 const Playground = () => {
-    const LABELS = ["INBOX", "SENT", "IMPORTANT"]//, "INBOX", "TRASH"]//["INBOX", "CHAT", "SENT", "SPAM"]
+    const LABELS = ["INBOX", "EPFL", "SENT", "IMPORTANT"]//, "INBOX", "TRASH"]//["INBOX", "CHAT", "SENT", "SPAM"]
     const COUNT = 5
     const LOAD_BATCH = 5
 
@@ -137,32 +138,48 @@ const Playground = () => {
     }
 
     const personQueues = () => {
-        return LABELS.map((l, i) =>
-            <PersonQueue queueIndex={i} title={l} list={listMails(i)}
-                         queueHover={setHoveredQueue} selected={drag && hoveredQueue === i}
-                         drag={drag} setDrag={setDrag}
-                         setSelect={setSelect}
-                         setDragData={setDraggedPersonData}
-                         replenishQueue={(lastMailIndex) => loadMorePeopleInQueue(i, lastMailIndex)}
-            />
-        )
+        const x = hoveredQueue
+        return LABELS.map((l,i)=>{
+            return i===x?<div className={"queue-container"}></div>:queueComponent(l,i)
+        })
     }
-    //snippetWidget={select[1]===i?"":""}
+
+    const highlightedQueue = () => {
+        const x= hoveredQueue
+        return LABELS.map((l,i)=>{
+            return i!==x?<div className={"queue-container"} style={{pointerEvents:"none"}} ></div>:queueComponent(l,i)
+        })
+    }
+
+    const queueComponent = (l, i) => <PersonQueue queueIndex={i} title={l} list={listMails(i)}
+                                                  queueHover={setHoveredQueue} selected={drag && hoveredQueue === i}
+                                                  drag={drag} setDrag={setDrag}
+                                                  setSelect={setSelect}
+                                                  setDragData={setDraggedPersonData}
+                                                  replenishQueue={(lastMailIndex) => loadMorePeopleInQueue(i, lastMailIndex)}/>
+
+
+
 
     const draggedPerson = () => {
         return <DraggablePerson data={dragData} pos={{x: mousePos[0], y: mousePos[1], z: 150}}/>
     }
 
     return (
-        <div className="playground" onMouseUp={onMouseUp}>
-            <Refresh whenRefresh={() => {
-                fetchMailsAndPictures()
-            }}/>
-            {drag ? draggedPerson() : ""}
-            {personQueues()}
-            <Snippet data={select}/>
-            <TrashBin hovered={() => setHoveredQueue(-1)} open={drag}/>
-        </div>
+        <>
+            <div className="playground" onMouseUp={onMouseUp}>
+                <Refresh whenRefresh={() => {
+                    fetchMailsAndPictures()
+                }}/>
+                {drag ? draggedPerson() : ""}
+                {personQueues()}
+                <Snippet data={select}/>
+                <TrashBin hovered={() => setHoveredQueue(-1)} open={drag}/>
+            </div>
+            <div className="playground" onMouseUp={onMouseUp}>
+                {highlightedQueue()}
+            </div>
+        </>
     )
 //            <LabelMenu/>
 }

@@ -44,7 +44,8 @@ const PersonQueue = (props) => {
         const delta = -Math.max(-1, Math.min(1, (event.deltaY)))//.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
         setScrollIndex(Math.min(props.list.length - 1, Math.max(0, scrollIndex + delta)))
         //replenish queue (add new mails to top) if scrolled past threshhold
-        if (props.list.length - scrollIndex <= END_LIST_COUNT_MIN) props.replenishQueue(props.list.length)
+        //TODO: uncomment during production
+        //if (props.list.length - scrollIndex <= END_LIST_COUNT_MIN) props.replenishQueue(props.list.length)
     }
 
     const people = () => {

@@ -13,8 +13,8 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', "https://www.g
 const TOKEN_PATH = path.join(process.cwd(), 'controller/api/googleApiCreds/token.json'); //
 const CREDENTIALS_PATH = path.join(process.cwd(), 'controller/api/googleApiCreds/credentials.json');
 
-
 const dayjs = require('dayjs')
+
 
 /**
  * Reads previously authorized credentials from the save file.
@@ -135,12 +135,16 @@ function getInfo(messagePart, id) {
     let senderNames = unsortedNames.join(" ")
     if (!senderNames) senderNames = "Anonymous"
 
+    return formatResponse(subject, senderNames, senderEmail, "body", formattedDate, time, id)
+}
+
+const formatResponse = (sub, names, email, body, date, time, id) => {
     return {
-        subject: subject,
-        senderName: senderNames,
-        senderEmail: senderEmail,
-        body: "body",
-        date: formattedDate,
+        subject: sub,
+        senderName: names,
+        senderEmail: email,
+        body: body,
+        date: date,
         time: time,
         id: id
     }
@@ -170,6 +174,20 @@ const myProfilePicture = (auth) => {
     });
 }
 
+
+const TEST_EPFL_MAILS = [
+    formatResponse("Fait ton devoir", "Emmanuel", "emmanuel.abbe@epfl.ch", "body", "Today", "04:20", 232355),
+    formatResponse("Please solve P vs NP problem by tmrw. Thx!", "Mika Goos", "mika.goos@epfl.ch", "body", "Today", "04:20", 232323),
+    formatResponse("Votre code est entierement identique à celui de Pantalos!?", "Chapellier", "jean-cedric.chappelier@epfl.ch", "body", "Yesterday", "06:09", 44444),
+    formatResponse("I am confused", "Karl Aberer", "karl.aberer@epfl.ch", "body", "Yesterday", "06:09", 11122),
+    formatResponse("martin wants to discuss about ice cream flavours", "Martin Vetterli", "martin.vetterli@epfl.ch", "body", "Today", "04:20", 232323),
+    formatResponse("I am proud to say that the rats have finally taken over the BC building. RISE MY MINIONS!", "Viktor", "viktor.kuncak@epfl.ch", "body", "Yesterday", "06:09", 78945),
+    formatResponse("Scala is very cool", "Odersky", "martin.odersky@epfl.ch", "body", "Yesterday", "06:09", 445645),
+    formatResponse("I have bred 200 more rats, will be out under the BC floors by tomorrow", "Viktor", "viktor.kuncak@epfl.ch", "body", "Yesterday", "06:09", 6656),
+    formatResponse("Jaimerais un deuxieme entretien avec Pantalos... ", "Chappelier", "jean-cedric.chappelier@epfl.ch", "body", "Yesterday", "06:09", 88888)
+]
+
+
 /**
  * fetches most recent count mails and returns a promise
  * @param count
@@ -178,6 +196,8 @@ const myProfilePicture = (auth) => {
  * @return {Promise<Object[]>} list of json objects containing email info. (subject, sender, body)
  */
 const fetchMail = (count, label, startIndex = 0) => {
+    //TODO: remove this during production. for testing only!
+    if(label==="EPFL") return Promise.resolve(TEST_EPFL_MAILS)
     return authorize().then(a => getRecentEmails(a, count, label, startIndex))
 }
 

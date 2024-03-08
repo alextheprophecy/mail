@@ -1,4 +1,6 @@
 .playground {
+    pointer-events: none;
+    position: absolute;
     margin : auto;
     left:0;
     top:0;
